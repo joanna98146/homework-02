@@ -8,6 +8,8 @@
 #Character.create(name: 'Luke', movie: movies.first)
 
 Book.destroy_all
+Author.destroy_all
+Authorship.destroy_all
 
 classifications = 
 [
@@ -39,9 +41,21 @@ book_types = ['Fiction', 'Non-Fiction']
 
 50.times do
   Book.create!(title: Faker::Book.title, 
-               author: Faker::Book.author, 
+               sub_title: Faker::Book.title,
                classification: classifications.sample, 
                genre: Faker::Book.genre, 
                book_type: book_types.sample,
                year: rand(1875..2017))
 end
+
+25.times do
+  Author.create!(first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, age: rand(10..100))
+end
+
+author_ids = Author.pluck(:id)
+books = Book.all
+
+books.each do | book |
+  Authorship.create!(book_id: book.id, author_id: author_ids.sample)
+end
+
